@@ -1,0 +1,96 @@
+﻿@model List<Musteris>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .fatura {
+        display: none;
+    }
+</style>
+<body>
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <br /><br />
+                        <h3 class="card-title" style="margin-left:360px;"> Müşteri Fatura Sorgulama </h3>
+                        <br />
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="table table-bordered border-dark col-md-8" style="margin-left:230px;">
+                        <table id="MusteriListId" class="table table-success table-striped">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Musteri</th>
+                                    <th>İncele</th>
+                                </tr>
+                            </thead>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td> @item.ID </td>
+                                    <td> @item.UNVAN </td>
+                                    <td> <button class="button1" type="button" onclick="FaturaList( @item.ID )">İncele</button> </td>
+                                </tr>
+                            }
+                        </table>
+                    </div>
+                    <br />
+                    <div class="fatura" id="faturaId">
+                        <div class="table table-bordered border-dark col-md-8" style="margin-left: 230px;">
+                            <div class="table-success col-md-8" style="margin-left:130px;">
+                                <h6>Müşterinin maksimum borca ulaştığı tarih</h6>
+                            </div>
+                            <table id="FaturaListId" class="table table-success table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Müşteri Numarası</th>
+                                        <th>Fatura Tarihi</th>
+                                        <th>Maximum Borç </th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script type="text/javascript">
+    function FaturaList(user) {
+        debugger;
+        faturaId.style.display = "block";
+        var t = $('#FaturaListId').DataTable({
+            "paging": false,
+            "searching": false,
+            "info": false
+        });
+        t.destroy();
+        t.rows().clear().draw(); // t tablelının satırlarını temizle alt alta eklemesini engelemek için
+        $.ajax({
+            url: '/Musteri/FaturaListele?id=' + user, // controllerdaki metodunu çagırıyor
+            type: 'GET',
+            dataType: 'json',
+            success: function (faturalistele) {
+                debugger;
+                t.row.add([ // satırlarını gezip çektiğimiz verileri kaydediyoruz
+                    faturalistele.MUSTERI_ID,
+                    faturalistele.ODEME_TARIHI,
+                    faturalistele.FATURA_TUTARI
+                ]).draw(false);
+            },
+            error: function (faturalistele) {
+                alert(faturalistele.Error);
+            }
+        })
+    }
+</script>
+
+

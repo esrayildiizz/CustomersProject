@@ -1,0 +1,161 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="CustomerProjectModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Faturas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MUSTERI_ID" Type="int" Nullable="false" />
+          <Property Name="FATURA_TARIHI" Type="nvarchar(max)" />
+          <Property Name="FATURA_TUTARI" Type="float" Nullable="false" />
+          <Property Name="ODEME_TARIHI" Type="nvarchar(max)" />
+        </EntityType>
+        <EntityType Name="Musteris">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" Nullable="false" />
+          <Property Name="UNVAN" Type="nvarchar(max)" />
+        </EntityType>
+        <Association Name="FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID">
+          <End Role="Musteris" Type="Self.Musteris" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Faturas" Type="Self.Faturas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Musteris">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Faturas">
+              <PropertyRef Name="MUSTERI_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="sp_fatura_tarih" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="ID" Type="int" Mode="In" />
+        </Function>
+        <EntityContainer Name="CustomerProjectModelStoreContainer">
+          <EntitySet Name="Faturas" EntityType="Self.Faturas" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Musteris" EntityType="Self.Musteris" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID" Association="Self.FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID">
+            <End Role="Musteris" EntitySet="Musteris" />
+            <End Role="Faturas" EntitySet="Faturas" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="CustomerProjectModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Faturas">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MUSTERI_ID" Type="Int32" Nullable="false" />
+          <Property Name="FATURA_TARIHI" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="FATURA_TUTARI" Type="Double" Nullable="false" />
+          <Property Name="ODEME_TARIHI" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Musteris" Relationship="Self.FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID" FromRole="Faturas" ToRole="Musteris" />
+        </EntityType>
+        <EntityType Name="Musteris">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" />
+          <Property Name="UNVAN" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Faturas" Relationship="Self.FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID" FromRole="Musteris" ToRole="Faturas" />
+        </EntityType>
+        <Association Name="FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID">
+          <End Role="Musteris" Type="Self.Musteris" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Faturas" Type="Self.Faturas" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Musteris">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="Faturas">
+              <PropertyRef Name="MUSTERI_ID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CustomerProjectEntities1" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Faturas" EntityType="Self.Faturas" />
+          <EntitySet Name="Musteris" EntityType="Self.Musteris" />
+          <AssociationSet Name="FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID" Association="Self.FK_dbo_Faturas_dbo_Musteris_MUSTERI_ID">
+            <End Role="Musteris" EntitySet="Musteris" />
+            <End Role="Faturas" EntitySet="Faturas" />
+          </AssociationSet>
+          <FunctionImport Name="sp_fatura_tarih" ReturnType="Collection(CustomerProjectModel.sp_fatura_tarih_Result)">
+            <Parameter Name="ID" Mode="In" Type="Int32" />
+          </FunctionImport>
+        </EntityContainer>
+        <ComplexType Name="sp_fatura_tarih_Result">
+          <Property Type="Int32" Name="MUSTERI_ID" Nullable="false" />
+          <Property Type="String" Name="ODEME_TARIHI" Nullable="true" />
+          <Property Type="Double" Name="FATURA_TUTARI" Nullable="true" />
+        </ComplexType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CustomerProjectModelStoreContainer" CdmEntityContainer="CustomerProjectEntities1">
+          <EntitySetMapping Name="Faturas">
+            <EntityTypeMapping TypeName="CustomerProjectModel.Faturas">
+              <MappingFragment StoreEntitySet="Faturas">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="MUSTERI_ID" ColumnName="MUSTERI_ID" />
+                <ScalarProperty Name="FATURA_TARIHI" ColumnName="FATURA_TARIHI" />
+                <ScalarProperty Name="FATURA_TUTARI" ColumnName="FATURA_TUTARI" />
+                <ScalarProperty Name="ODEME_TARIHI" ColumnName="ODEME_TARIHI" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Musteris">
+            <EntityTypeMapping TypeName="CustomerProjectModel.Musteris">
+              <MappingFragment StoreEntitySet="Musteris">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="UNVAN" ColumnName="UNVAN" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="sp_fatura_tarih" FunctionName="CustomerProjectModel.Store.sp_fatura_tarih">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CustomerProjectModel.sp_fatura_tarih_Result">
+                <ScalarProperty Name="MUSTERI_ID" ColumnName="MUSTERI_ID" />
+                <ScalarProperty Name="ODEME_TARIHI" ColumnName="ODEME_TARIHI" />
+                <ScalarProperty Name="FATURA_TUTARI" ColumnName="FATURA_TUTARI" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
